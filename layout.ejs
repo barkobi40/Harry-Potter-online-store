@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="/assets/HRPI.png">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title> HarryPotterStore </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Comforter&display=swap" rel="stylesheet" />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" ></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
+    <script src="//code.jquery.com/ui/1.13.2/jquery-ui.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" ></script>
+    <script src="/socket.io/socket.io.js" ></script>
+    <script src="https://d3js.org/d3.v5.js" ></script>
+    
+    <style type="text/css" media="screen, print">
+        * {
+            color: white;
+            margin: 0;
+        }
+        
+.main-header {
+    margin-top: 3%;
+}
+
+
+        h1 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-image: url('/assets/background.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        
+        .page-wrap {
+            min-height: 100%;
+            margin-bottom: -60px; 
+        }
+        
+        .page-wrap:after {
+            content: "";
+            display: block;
+        }
+        
+        .site-footer, .page-wrap:after {
+            height: 60px; 
+        }
+
+        header {
+            text-align: center;
+        }
+
+        table th, table td {  
+            border: none;
+            padding: 10px;
+
+            background-color: rgba(0, 0, 0, 0.5); 
+            border-radius: 10px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        }
+    
+        table {
+            border-collapse: separate;
+            width: 50%;     
+        }
+
+        .table-data {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+
+        #dialog {
+            min-width: 800px;
+            max-height: 600px !important;
+            overflow-y: auto !important;
+            background: #1d1d1d!important;
+        }  
+        
+        #dialog > table > tr > td > button {
+            background-color: #a80000;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px;
+        }
+
+        #dialog > table > tr > td > button:hover {
+            background-color: #7c0000;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px;
+        }
+
+        aside {
+            background-color: black;
+            
+        }
+
+        #footer {
+            position: fixed;
+            left: 0px;
+            top: 0px;              
+            width: 100%;
+            background: #010504 !important;
+            z-index: 9999 !important;; 
+        }
+        
+        #footer h5 {
+            padding-left: 10px;
+            border-left: 3px solid #eeeeee;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        #footer a {
+            color: #ffffff;
+            text-decoration: none !important;
+            background-color: transparent;
+            -webkit-text-decoration-skip: objects;
+        }
+        
+        #footer ul.social li {
+            padding: 3px 0;
+        }
+        
+        #footer ul.social li a i {
+            margin-right: 5px;
+            font-size:25px;
+            -webkit-transition: .5s all ease;
+            -moz-transition: .5s all ease;
+            transition: .5s all ease;
+        }
+
+        #footer ul.social li:hover a i {
+            font-size: 30px;
+            margin-top: -10px;
+        }
+      
+        #footer ul.social li a,
+        #footer ul.quick-links li a {
+                color: #ffffff;
+        }
+        
+        #footer ul.social li a:hover {
+            color: #eeeeee;
+        }
+
+        #footer ul.quick-links li {
+            padding: 3px 0;
+            -webkit-transition: .5s all ease;
+            -moz-transition: .5s all ease;
+            transition: .5s all ease;
+        }
+
+        #footer ul.quick-links li:hover {
+            padding: 3px 0;
+            margin-left:5px;
+            font-weight:700;
+        }
+        
+        #footer ul.quick-links li a i {
+            margin-right: 5px;
+        }
+        
+        #footer ul.quick-links li:hover a i {
+            font-weight: 700;
+        }
+
+        @media (max-width:767px){
+            #footer h5 {
+                padding-left: 0;
+                border-left: transparent;
+                padding-bottom: 0px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .transform {
+            transition: all 2s ease;
+            transition-duration: 0.9s;
+        }
+
+        .transform-active {
+            width: 100px;
+        }
+
+        @font-face {
+            font-family: 'LocalFont';
+            font-style: normal;
+            font-weight: 400;
+            src: local('LocalFont'), url('/fonts/LocalFont.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'HarryPotter';
+            font-weight: 400;
+            src: url('/fonts/HarryPotter.ttf');
+        }
+        @font-face {
+            font-family: 'introFont';
+            font-weight: 400;
+            src: url('/fonts/Legendary.ttf');
+        }
+        h3 {
+            font-size: 100px;
+            font-family: 'HarryPotter';
+            color: rgb(184, 150, 2);
+            text-shadow: 
+        -2px -2px 0 #000,  
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000;
+        }
+
+
+        .introWeb{
+            font-family: 'introFont';
+            font-size: 30px;
+
+        }
+        
+        .sign-in {
+            font-size: 20px;
+            font-weight: 1000;
+            font-family: 'localFont';
+        }
+        form {
+            display: flexbox;
+            justify-content: center;
+        }
+
+        button, option, input {
+            color:white;
+        }
+        input {
+            margin-right: 10px;
+        }
+
+        .filter-bar {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgb(255, 255, 255);
+}
+
+.filter-form {
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-form > div {
+    flex: 1;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-form select, 
+.filter-form input {
+    width: 100%;
+    padding: 10px;
+    background-color: #1d1d1d;
+    color: rgba(255, 217, 0, 0.623);
+    border: 'none';
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.filter-form select:hover, 
+.filter-form input:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+button[type="submit"], 
+button[type="button"] {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button[type="submit"]{
+    background-color: goldenrod;
+}
+
+button[type="submit"]:hover {
+    background-color: gold;
+}
+
+input{
+    color: gold;
+}
+
+div#filter-collection {
+    margin-right: 23px !important;
+    margin-left: 15px !important;
+}
+
+
+input[type="number"] {
+    background-color: #1d1d1d;
+    margin-bottom: 20px !important;
+    border: none;
+}
+
+input[type="number"]:hover {
+    background-color: #0e0e0e;
+}
+
+div.product-card {
+    
+    min-width: calc(25% - 1rem);
+    min-height: 25%;
+}
+
+table[id="shopping_cart"],
+div[id="dialog"] {
+    background-color: goldenrod;
+}
+
+span[id="ui-id-1"] {
+    color: black;
+}
+
+a[href="/login"] {
+    background-color: rgba(212, 0, 0, 0.918)(255, 0, 0);
+}
+
+span.fa-sign-in {
+    margin-top: 30px;
+}
+
+button[control-id="ControlID-6"] {
+    background-color: #a80000;
+}
+
+[type="submit"] {
+    background-color: gold;
+}
+
+[type="submit"]:hover {
+    background-color: goldenrod;
+}
+
+button[value="Edit"],
+button[onclick="this.form.submitted=this.value;"] {
+    background-color: rgb(24, 206, 0);
+
+}
+
+button[value="Edit"]:hover,
+button[onclick="this.form.submitted=this.value;"]:hover {
+    background-color: green;
+
+}
+button[value="Delete"] {
+    background-color: rgb(255, 44, 44);
+
+}
+
+button[value="Delete"]:hover {
+    background-color: rgb(146, 5, 5);
+
+}
+
+select[name="filter_department"] {
+    background-color: #1d1d1d;
+    border: none;
+    border-radius: 3px;
+    margin:15px !important;
+}
+
+select[name="filter_department"]:hover {
+    background-color: #0e0e0e;
+}
+
+select[name="filter_collectionName"] {
+    background-color: #1d1d1d;
+    border: none;
+    border-radius: 3px;
+    margin:15px !important;
+}
+
+select[name="filter_collectionName"]:hover {
+    background-color: #0e0e0e;
+}
+
+td input[type="text"] {
+    background-color: #ffffff00;
+    color: #eeeeee;
+}
+@font-face {
+        font-family: 'NewTo';
+        font-weight: 400;
+        src: url('/fonts/Cinzel.ttf'); 
+    }
+
+    .sign-in {
+        font-size: 20px;
+        font-weight: 1000;
+        font-family: 'NewTo'; 
+    }
+
+    nav.quick-links li {
+        font-family: 'NewTo'; 
+        margin: 20px;
+    }
+
+.cart-modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.cart-modal-content {
+    position: relative;
+    background-color: #000000;
+    margin: 15% auto;
+    padding: 20px;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 100px 100px rgba(255, 255, 255, 0.178) !important;
+
+}
+
+.cart-modal-content p {
+    margin: 20px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+button.add-to-cart-button:hover {
+    background-color: #775d0a;
+}
+</style>
+
+
+  
+</head>
+<body class="page-wrap" style="overflow-x: hidden; overflow-y:auto;">
+  <header>
+    <br/><br/>
+    <h3 class="main-header">Harry Potter Shop</h3>     
+    <div class="introWeb">
+    Step into a World of Magic at the Harry Potter Store! <br>
+    Unveil extraordinary artifacts and enchanting robes that embrace your inner wizard. <br>
+    From perfect wands to captivating spellbooks, join us on this spellbinding journey into the heart of fantasy! <br>
+</div>
+  </header>
+  <section id="footer">
+    <div="site-footer">
+        <div class="col text-sm-left text-md-left" style="display: inline-block">
+            <div style="margin: auto;">
+                <nav class="list-unstyled quick-links" style="display: flex; justify-content: center; padding-top: 20px; background: black; position:static; z-index: 9999;">
+                    <li style="margin: 20px;">
+                        <a href="/home">
+                            <i class="fa fa-home"></i> 
+                            Home
+                        </a>
+                    </li>
+                    <li style="margin: 20px;"><a href="/where-to-find-us"><i class="fa fa-map-marker"></i>Where to Find Us</a></li>
+                    <li style="margin: 20px;"><a href="/about-us"><i class="fa fa-info-circle"></i>About Us</a></li>
+                    <li style="margin: 20px;"><a href="https://www.facebook.com/profile.php?id=61550798721132"><i class="fa fa-facebook"></i></a></li>
+                    <li style="margin: 20px;"><a href="/login"><i class="fa fa-sign-out"></i>Log Out</a></li>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+</section>
+
+<script>
+  var socket = io() 
+
+  function showOrders ( fan_id ) {
+    $('#shopping_cart').find ( "tr" ).remove ( )
+    const webMethod = "/getOrders"
+    var fan_id_param = fan_id
+    if ( $( "#user_id" ).length > 0 )
+    {
+        fan_id_param = $( "#user_id" )[0].value
+    }
+        
+    $.ajax({
+        type: "POST",
+        url: webMethod,
+        data: JSON.stringify ( { 'fanId': fan_id_param } ),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function ( result ) {
+            var rows = []
+            for ( i = 0; i < result.length; i = i + 1 ) 
+            {
+                var row = $( '<tr style="font-weight: bold; color: blue; text-shadow: 2px 2px 4px #000000;" />' ) 
+                row.append ( $( '<td />' ).html ( ( i + 1 ).toString ( ) ) ) 
+                row.append ( $( '<td id="order_' + i.toString () + '" colspan="4" /> ' ).html ( moment ( result[i]["_id"] ).format ( 'hh:mm a MMM DD YYYY' ) ) )  
+                row.append ( $( '<td><button class="btn btn-login btn-lg" onclick=" deleteOrder ( \'' + fan_id_param + '\', ' + i.toString () + ' ) " > Delete </button></td> ' ) ) 
+                rows.push ( row )
+                row = ( $( '<tr style="font-weight: bold " /> ' ) )
+                    row.append ( $( '<td />' ).html ( "Department") ) 
+                    row.append ( $( '<td />' ).html ( "Title" ) ) 
+                    row.append ( $( '<td />' ).html( "CollectionName" ) ) 
+                    row.append ( $( '<td />' ).html ( "Character" ) ) 
+                    row.append ( $( '<td />' ).html ( "Price" ) )  // image
+                    rows.push ( row )
+                for ( k = 0; k < result[i]["records"].length; k = k + 1 )
+                {
+                                       
+                    row = ( $( '<tr />' ) )
+                    row.append ( $( '<td />' ).html ( result[i]["records"][k]["department"] ) ) 
+                    row.append ( $( '<td />' ).html ( result[i]["records"][k]["title"] ) ) 
+                    row.append ( $( '<td />' ).html ( result[i]["records"][k]["collectionName"] ) ) 
+                    row.append ( $( '<td />' ).html ( result[i]["records"][k]["character"] ) ) 
+                    row.append ( $( '<td />' ).html ( result[i]["records"][k]["price"] ) )    // image
+                    rows.push ( row )                       
+                }                        
+            }
+
+            // add all the rows
+            for ( i = 0; i < rows.length; i = i + 1 ) 
+            {
+                $( "#shopping_cart" )[0].append ( rows[i][0] )
+            }
+            $( "#dialog" ).dialog ( )
+        },
+    } )
+}
+
+  function deleteOrder ( fan_id, i ) 
+  {
+    const webMethod = "/deleteOrder"
+    var fan_id_param = fan_id
+    if ( $( "#user_id" ).length > 0 )
+    {
+        fan_id_param = $("#user_id")[0].value
+    }
+
+    $.ajax ( {
+        type: "POST",
+        url: webMethod,
+        data: JSON.stringify ( { 'fanId': fan_id_param, 'orderTime': $( "td[id='order_" + i.toString ( ) + "']" )[0].textContent } ),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function ( result ) {
+            showOrders ( fan_id )
+        },
+    } )
+  }
+
+  function showLocations ( ) {      
+    const webMethod = "/getLocations"
+    $.ajax ( 
+        {
+            type: "POST",
+            url: webMethod,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function ( result ) {
+                var map = new google.maps.Map(
+                    $( '#map' )[0], 
+                    {
+                        zoom: 10,
+                        center: new google.maps.LatLng(31.8927709114605, 34.81127118042523),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    } )
+                               
+                var infowindow = new google.maps.InfoWindow ( )
+                var marker, i
+                for ( i = 0; i < result.length; i++ ) 
+                {  
+                    marker = new google.maps.Marker(
+                        {
+                            position: new google.maps.LatLng ( result[i]["latitude"], result[i]["longitude"] ),
+                            map: map,
+                        } )
+                    google.maps.event.addListener ( marker, 'click', ( function ( marker, i ) {
+                        return function ( ) {
+                            infowindow.setContent ( result[i]["latitude"] )
+                            infowindow.open ( map, marker )
+                        }
+                    } ) ( marker, i ) )   
+                }
+
+                map.addListener ( "click", ( mapsMouseEvent ) => {
+                    $("#lat")[0].value = mapsMouseEvent.latLng.toJSON ( ).lat
+                    $("#lon")[0].value = mapsMouseEvent.latLng.toJSON ( ).lng
+                } )
+            },
+        } )       
+  }
+
+  function showVideo ( ) {
+    $( "#video_popup" ).dialog();
+  }      
+</script>  

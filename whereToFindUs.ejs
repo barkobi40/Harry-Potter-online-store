@@ -1,0 +1,73 @@
+<%- include('layout.ejs'); %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Where to Find Us</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQDBw3_ZOCzjb_UFDAi6de4TbqfSl1PYg"></script>
+    <style>
+        #map {
+    border: 4px solid black;
+    border-radius: 15px;          
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+    margin: 30px;
+}
+
+        #history-section {
+            padding: 20px;
+            font-size: 18px;
+            border-bottom: 2px solid #ddd;
+        }
+        @font-face {
+            font-family: 'MapF';
+            font-weight: 400;
+            src: url('/fonts/Cinzel.ttf');
+        }
+        #map-caption {
+            text-align: center;
+            margin-top: 10px;
+            font-family: "Mapf"
+        }
+        
+    </style>
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 31.746051, lng: 34.851612 }
+            });
+
+            <% locations.forEach(function(location) { %>
+                new google.maps.Marker({
+                    position: { lat: parseFloat('<%= location.latitude %>'), lng: parseFloat('<%= location.longitude %>') },
+                    map: map
+                });
+            <% }); %>
+        }
+    </script>
+</head>
+
+<body onload="initMap()">
+    <br/>
+    <div id="map" style="min-height: 800px; min-width: 500px;"></div>
+    
+    <div id="map-caption" style="text-align: center; margin-top: 10px;">
+        <p>
+            <h2><u>Come visit us at:</u></h2><br>
+            -  Israel , Yehud - Big Yehud Mall  -<br><br>
+            -  Israel , Jeusalem - first station  -<br><br>
+            -  Israel , Tel Aviv - Rabin square  -<br><br>
+            -  Israel , Tel Aviv - Habima square  -<br><br>
+            -  Israel , Rishon Letsiyon  - Rishonim Mall -<br><br>
+            -  Israel , mazkeret batya  -<br><br>
+            -  Israel , Ashdod - Big Fashion mall  -<br><br>
+            -  New York , New York city - Times square  -<br><br>
+            -  Italy , Firenze  -
+
+
+        </p>
+    </div>
+</body>
+
+</html>
